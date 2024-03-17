@@ -1,0 +1,40 @@
+.navbar-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 200px;
+    background: #ffffff;
+    box-shadow: 4px 0px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2000;
+}
+
+.navbar-header {
+    background-color: #4e1075;
+    width: 100%;
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-logo {
+    width: 80%;
+    max-width: 120px;
+}
+
+.navbar-icons-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 16px;
+}
+
+.navbar-icon {
+    width: 100%; /* Ajustamos el ancho de los botones */
+    margin-bottom: 20px;
+}

@@ -1,0 +1,16 @@
+.banner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 152px; /* Altura deseada del banner */
+  background-color: #d60f0f; /* Color de fondo opcional */
+  z-index: 1000; /* Asegura que esté encima de otros elementos */
+  overflow: hidden; /* Evita que la imagen salga del contenedor si es demasiado grande */
+}
+
+.banner-container img {
+  width: 30%;
+  height: 100%; /* La altura se ajustará automáticamente */
+  margin-left: 200px;
+ }
