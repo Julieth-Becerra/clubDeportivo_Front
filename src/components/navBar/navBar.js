@@ -2,28 +2,29 @@ import React, { useState } from 'react';
 import { Button } from 'primereact/button';
 import 'primeicons/primeicons.css';
 import './styleNavBar.css';
+import { NavLink } from 'react-router-dom';
 
 export default function NavBar() {
     const [menuItems] = useState([
         {
             label: 'Afiliados',
             icon: 'pi pi-users',
-            command: () => {}
+            route: '/afiliados' // Aquí define la ruta correspondiente
         },
         {
             label: 'Disciplinas',
             icon: 'pi pi-star',
-            command: () => {}
+            route: '/disciplinas'
         },
         {
             label: 'Eventos',
             icon: 'pi pi-calendar',
-            command: () => {}
+            route: '/eventos'
         },
         {
             label: 'Resultados',
             icon: 'pi pi-trophy',
-            command: () => {}
+            route: '/resultados'
         }
     ]);
 
@@ -36,9 +37,12 @@ export default function NavBar() {
             </div>
             <div className="navbar-icons-container">
                 {menuItems.map((item, index) => (
-                    <Button icon={item.icon} key={index}  label={item.label} rounded outlined aria-label="Filter"  className="navbar-icon"  />
+                    <NavLink to={item.route} key={index} className="navbar-icon">
+                        <Button icon={item.icon} label={item.label} rounded outlined aria-label="Filter" />
+                    </NavLink>
                 ))}
             </div>
         </div>
     );
 }
+
