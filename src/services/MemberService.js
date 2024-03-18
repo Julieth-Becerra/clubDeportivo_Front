@@ -1,6 +1,6 @@
 // MemberService.js
 
-const BASE_URL = 'https://clubdeportivo-back.onrender.com'; // La URL base de tu API
+const BASE_URL = process.env.REACT_APP_API_URL; // La URL base de tu API
 
 const MemberService = {
   getAllMembers: async () => {
