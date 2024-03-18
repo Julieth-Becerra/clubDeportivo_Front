@@ -1,22 +1,21 @@
-.member-table-container {
-    margin: 20px; /* Añade un margen alrededor del contenedor */
-    margin-top: 230px;
-  }
-  
-  .title {
-    color: #1e1e1f; /* Cambia el color del título */
-    font-size: 24px; /* Ajusta el tamaño de la fuente del título */
-    margin-bottom: 20px; /* Añade espacio debajo del título */
-  }
-  
-  .p-datatable {
-    font-size: 16px; /* Ajusta el tamaño de la fuente de la tabla */
-  }
-  
 
-  .button-container {
-    margin-top: 20px; 
-    display: flex;
-  }
+
+.title {
+  color: #1e1e1f;
   
-  
+  font-size: 24px;
+
+  margin-bottom: 20px;
+ 
+}
+
+.p-datatable {
+  font-size: 16px;
+  /* Ajusta el tamaño de la fuente de la tabla */
+}
+
+
+.button-container {
+  margin-top: 20px;
+  display: flex;
+}
