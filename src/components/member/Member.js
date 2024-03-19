@@ -9,6 +9,8 @@ import './styles.css';
 import Modal from '../modal';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
+import { useRef } from 'react';
+import { Toast } from 'primereact/toast';
 
 const MemberTable = () => {
   const [members, setMembers] = useState([]);
@@ -17,6 +19,8 @@ const MemberTable = () => {
   const [displayModal, setDisplayModal] = useState(false);
   const [errors, setErrors] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+
+  const toast = useRef(null); // Referencia al componente Toast
 
   const [confirmModalProps, setConfirmModalProps] = useState({
     visible: false,
@@ -43,9 +47,11 @@ const MemberTable = () => {
     setSportDisciplines(response.data);
   }
 
+
   const openMemberModal = (member) => {
-    if (member) {
-      // Si hay un miembro seleccionado, busca la disciplina deportiva correspondiente en el array de disciplinas deportivas y asígnala al miembro seleccionado
+   
+    if (member) {    
+      
       const selectedDiscipline = selectedMember && selectedMember.sportDiscipline
         ? sportDisciplines.find(discipline => discipline.id === selectedMember.sportDiscipline.id)
         : null;
@@ -79,10 +85,19 @@ const MemberTable = () => {
 
   const addMember = async (member) => {
     try {
-      await MemberService.addMember(member);
-      fetchMembers(); // Actualizar la lista de miembros después de agregar uno nuevo
+      const response = await MemberService.addMember(member);
+
+      if (response.data) {
+        fetchMembers();
+        toast.current.show({ severity: 'success', summary: 'Éxito', detail: 'Miembro agregado correctamente' }); // Mostrar toast de éxito
+        hideMemberModal();
+      } else {
+        toast.current.show({ severity: 'error', summary: 'Error', detail: response.message }); // Mostrar toast de error
+      }
+
     } catch (error) {
       console.error('Error adding member:', error);
+      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Ocurrió un error al agregar el miembro' }); // Mostrar toast de error
     }
   };
 
@@ -102,9 +117,16 @@ const MemberTable = () => {
 
   const confirmDelete = async (member) => { // Acepta member como argumento
     try {
-      await MemberService.deleteMember(member.id); // Usa member.id en lugar de selectedMember.id
+      const response = await MemberService.deleteMember(member.id); // Usa member.id en lugar de selectedMember.id
       setConfirmModalProps({ ...confirmModalProps, visible: false });
       fetchMembers();
+
+      if (response.data) {
+        toast.current.show({ severity: 'success', summary: 'Éxito', detail: 'Miembro eliminado correctamente' });
+      }else{
+        toast.current.show({ severity: 'error', summary: 'Error', detail: response.message }); // Mostrar toast de error
+      }
+
       setDisplayModal(false);
     } catch (error) {
       console.error('Error deleting member:', error);
@@ -114,6 +136,8 @@ const MemberTable = () => {
 
   const handleFormSubmit = async () => {
     if (!selectedMember) return;
+
+    
 
     // Verificar campos requeridos antes de enviar el formulario
     const { id, name, age, address, sportDiscipline } = selectedMember;
@@ -153,12 +177,21 @@ const MemberTable = () => {
           },
           participations: selectedMember.participations
         };
-        await MemberService.updateMember(selectedMember.id, memberToUpdate);
+        const response = await MemberService.updateMember(selectedMember.id, memberToUpdate);
+
+        if (response.data) {
+          toast.current.show({ severity: 'success', summary: 'Éxito', detail: 'Miembro actualizado correctamente' });
+          hideMemberModal();
+        } else {
+          toast.current.show({ severity: 'error', summary: 'Error', detail: response.message });
+        }
+
+
         fetchMembers()
       } else {
         await addMember(memberToSend); // Esperar a que se agregue el miembro
       }
-      hideMemberModal(); // Ocultar el modal después de enviar el formulario
+       // Ocultar el modal después de enviar el formulario
     } catch (error) {
       console.error('Error adding member:', error);
     }
@@ -302,6 +335,7 @@ const MemberTable = () => {
         buttonAction={confirmModalProps.buttonAction ?? handleFormSubmit}
         severity={confirmModalProps.severity}
       />
+      <Toast ref={toast} />
     </div>
   );
 };
