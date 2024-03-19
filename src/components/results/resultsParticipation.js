@@ -14,8 +14,6 @@ const ParticipationTable = () => {
   const [participations, setParticipations] = useState([]);
   const [members, setMembers] = useState([]);
   const [events, setEvents] = useState([]);
-  const [member, setMember] = useState({});
-  const [event, setEvent] = useState({});
   const [selectedParticipation, setSelectedParticipation] = useState({});
   const [displayModal, setDisplayModal] = useState(false);
   const [errors, setErrors] = useState({});
@@ -41,31 +39,6 @@ const ParticipationTable = () => {
     const response = await EventService.getAllEvents();
     setEvents(response.data);
   };
-
-  const getMember = async (id) => {
-    try {
-      const response = await MemberService.getMember(id);
-      console.log("Member response data:", response.data);
-      const { id: memberId, name, age, address, sportDiscipline } = response.data;
-      setMember({ id: memberId, name, age, address, sportDiscipline });
-      console.log("Member state after setting:", member);
-    } catch (error) {
-      console.error("Error fetching member:", error);
-    }
-  };
-
-  const getEvent = async (id) => {
-    try {
-      const response = await EventService.getEvent(id);
-      console.log("Event response data:", response.data);
-      const { id: eventId, name, date } = response.data;
-      setEvent({ id: eventId, name, date });
-      console.log("Event state after setting:", event);
-    } catch (error) {
-      console.error("Error fetching event:", error);
-    }
-  };
-
 
   const openParticipationModal = async (participation) => {
     setSelectedParticipation(participation);
@@ -111,13 +84,24 @@ const ParticipationTable = () => {
 
   const deleteParticipation = async (participation) => {
     try {
-      await ParticipationService.deleteParticipation(participation.id);
-      toast.current.show({
-        severity: "success",
-        summary: "Éxito",
-        detail: "Participación eliminada correctamente",
-      });
-      fetchParticipations();
+      const response = await ParticipationService.deleteParticipation(participation.id);
+
+      if (!response.success) {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: response.message,
+        });
+        return;
+      } else {
+
+        toast.current.show({
+          severity: "success",
+          summary: "Éxito",
+          detail: "Participación eliminada correctamente",
+        });
+        fetchParticipations();
+      }
     } catch (error) {
       console.error("Error deleting participation:", error);
       toast.current.show({
@@ -162,14 +146,14 @@ const ParticipationTable = () => {
 
         if (selectedParticipation.id) {
           console.log("Editing participation:", selectedParticipation);
-          response = await editParticipation(selectedParticipation.id,participation);
+          response = await editParticipation(selectedParticipation.id, participation);
         } else {
           // Obteniendo directamente los datos del miembro y del evento necesarios
-         
+
 
           response = await addParticipation(participation);
 
-         
+
 
           if (response.id) {
             toast.current.show({

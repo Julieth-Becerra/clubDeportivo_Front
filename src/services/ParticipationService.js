@@ -29,11 +29,24 @@ const ParticipationService = {
     },
 
     deleteParticipation: async (id) => {
+      try {
         const response = await fetch(`${BASE_URL}/participations/${id}`, {
-            method: "DELETE",
-          });
-          return response.json();
+          method: "DELETE",
+        });
+    
+        // Verificar el estado de la respuesta
+        if (response.ok) {
+          return { success: true, message: "Participación eliminada correctamente." };
+        } else {
+          const errorData = await response.json();
+          return { success: false, message: errorData.message || "Ocurrió un error al eliminar la participación." };
+        }
+      } catch (error) {
+        console.error('Error deleting participation:', error);
+        return { success: false, message: "Ocurrió un error al eliminar la participación." };
+      }
     },
+    
 }
 
 export default ParticipationService;
