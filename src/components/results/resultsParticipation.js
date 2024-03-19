@@ -78,16 +78,17 @@ const ParticipationTable = () => {
     setErrors({});
   };
 
-  const editParticipation = async (participation) => {
+  const editParticipation = async (id, participation) => {
     try {
-      const response = await ParticipationService.updateParticipation(participation.id, participation);
+      const response = await ParticipationService.updateParticipation(id, participation);
 
-      if (response.status === 200) {
+      if (response.id) {
         toast.current.show({
           severity: "success",
           summary: "Éxito",
           detail: "Participación editada correctamente",
         });
+        hideParticipationModal();
       } else {
         toast.current.show({
           severity: "error",
@@ -134,34 +135,37 @@ const ParticipationTable = () => {
       try {
         let response; // Definir la variable response fuera del bloque if/else
 
+        const memberId = selectedParticipation.member.id;
+        const eventId = selectedParticipation.event.id;
+
+        const selectedMember = members.find(member => member.id === memberId);
+        const selectedEvent = events.find(event => event.id === eventId);
+
+        // Creando el objeto de participación con los campos necesarios
+        const participation = {
+          id: selectedParticipation.id || 0,
+          member: {
+            id: selectedMember.id,
+            name: selectedMember.name,
+            age: selectedMember.age,
+            address: selectedMember.address,
+            sportDiscipline: selectedMember.sportDiscipline
+          },
+          event: {
+            id: selectedEvent.id,
+            name: selectedEvent.name,
+            date: selectedEvent.date
+          },
+          position: selectedParticipation.position
+        };
+
+
         if (selectedParticipation.id) {
           console.log("Editing participation:", selectedParticipation);
-          response = await editParticipation(selectedParticipation);
+          response = await editParticipation(selectedParticipation.id,participation);
         } else {
           // Obteniendo directamente los datos del miembro y del evento necesarios
-          const memberId = selectedParticipation.member.id;
-          const eventId = selectedParticipation.event.id;
-
-          const selectedMember = members.find(member => member.id === memberId);
-          const selectedEvent = events.find(event => event.id === eventId);
-
-          // Creando el objeto de participación con los campos necesarios
-          const participation = {
-            id: selectedParticipation.id || 0,
-            member: {
-              id: selectedMember.id,
-              name: selectedMember.name,
-              age: selectedMember.age,
-              address: selectedMember.address,
-              sportDiscipline: selectedMember.sportDiscipline
-            },
-            event: {
-              id: selectedEvent.id,
-              name: selectedEvent.name,
-              date: selectedEvent.date
-            },
-            position: selectedParticipation.position
-          };
+         
 
           response = await addParticipation(participation);
 
