@@ -1,6 +1,5 @@
-// MemberService.js
 
-const BASE_URL = process.env.REACT_APP_API_URL; // La URL base de tu API
+const BASE_URL = process.env.REACT_APP_API_URL; 
 
 const MemberService = {
   getAllMembers: async () => {
@@ -31,6 +30,7 @@ const MemberService = {
   },
 
   deleteMember: async (id) => {
+    console.log('id:', id);
     const response = await fetch(`${BASE_URL}/members/${id}`, {
       method: 'DELETE',
     });

@@ -2,7 +2,7 @@ const BASE_URL = process.env.REACT_APP_API_URL;
 
 const SportDisciplineServise = {
 
-    getAllMembers: async () => {
+    getAllDisciplines: async () => {
         const response = await fetch(`${BASE_URL}/sportDisciplines`);
         return response.json();
     },

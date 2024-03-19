@@ -1,3 +1,20 @@
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  gap: 1.5rem;
+}
+
+.modal-form .p-float-label {
+  width: 100%;
+}
+
+.modal-form .p-inputtext,
+.modal-form .p-dropdown {
+  width: 100%; /* Hace que los campos de entrada y el dropdown ocupen todo el ancho disponible */
+}
+
+
 
 
 .title {
