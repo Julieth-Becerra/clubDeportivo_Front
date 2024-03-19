@@ -19,6 +19,7 @@ const MemberTable = () => {
 
   const fetchMembers = async () => {
     const response = await MemberService.getAllMembers();
+    console.log(response.data)
     setMembers(response.data);
   };
 
@@ -43,6 +44,7 @@ const MemberTable = () => {
         <Column field="name" header="Nombre" sortable></Column>
         <Column field="age" header="Edad" sortable></Column>
         <Column field="address" header="Dirección" sortable></Column>
+        <Column field="sportDiscipline.name" header="Disciplina" sortable></Column>
         <Column
           header="Editar"
           body={(rowData) => (

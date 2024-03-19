@@ -33,7 +33,7 @@ const ParticipationService = {
             method: "DELETE",
           });
           return response.json();
-    }
+    },
 }
 
 export default ParticipationService;

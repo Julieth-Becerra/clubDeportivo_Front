@@ -8,6 +8,8 @@ import Sidebar from './components/navBar/navBar';
 import Member from './components/member/Member';
 import Banner from './components/banner/banner';
 import SportDicipline from './components/dicipline/sportDicipline';
+import Event from './components/event/event';
+import ResultsParticipation from './components/results/resultsParticipation';
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
             <Routes>
               <Route path="/afiliados" element={<Member />} />
               <Route path="/disciplinas" element={<SportDicipline />} />
+              <Route path='/eventos' element={<Event />} />
+              <Route path='/resultados' element={<ResultsParticipation />}/>
             </Routes>
           </div>
         </Router>
