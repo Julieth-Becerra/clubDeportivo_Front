@@ -30,12 +30,18 @@ const MemberService = {
   },
 
   deleteMember: async (id) => {
-    console.log('id:', id);
+   
     const response = await fetch(`${BASE_URL}/members/${id}`, {
       method: 'DELETE',
     });
     return response.json();
   },
+
+  getMember: async (id) => {
+    const response = await fetch(`${BASE_URL}/members/${id}`);
+    return response.json();
+  },
 };
+
 
 export default MemberService;

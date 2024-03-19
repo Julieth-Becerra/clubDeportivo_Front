@@ -34,6 +34,10 @@ const EventService = {
     });
     return response.json();
   },
+  getEvent: async (id) => {
+    const response = await fetch(`${BASE_URL}/events/${id}`);
+    return response.json();
+  },
 };
 
 export default EventService;

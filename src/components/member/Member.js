@@ -35,12 +35,11 @@ const MemberTable = () => {
 
   const fetchMembers = async () => {
     const response = await MemberService.getAllMembers();
-    console.log(response.data)
     setMembers(response.data);
   };
 
   const getDisciplines = async () => {
-    const response = await SportDisciplineServise.getAllDisciplines();
+    const response = await SportDisciplineServise.getAllSportDisciplines();
     setSportDisciplines(response.data);
   }
 
@@ -48,7 +47,7 @@ const MemberTable = () => {
     if (member) {
       // Si hay un miembro seleccionado, busca la disciplina deportiva correspondiente en el array de disciplinas deportivas y asígnala al miembro seleccionado
       const selectedDiscipline = sportDisciplines.find(discipline => discipline.id === member.sportDiscipline.id);
-      console.log('selectedDiscipline:', selectedDiscipline);
+     
       setSelectedMember({
         ...member,
         sportDiscipline: selectedDiscipline // Asigna la disciplina deportiva encontrada al miembro seleccionado
@@ -153,6 +152,7 @@ const MemberTable = () => {
           participations: selectedMember.participations 
         };
         await MemberService.updateMember(selectedMember.id, memberToUpdate);
+        fetchMembers()
       } else {
         await addMember(memberToSend); // Esperar a que se agregue el miembro
       }
