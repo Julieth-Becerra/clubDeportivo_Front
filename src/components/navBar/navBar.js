@@ -22,7 +22,7 @@ export default function NavBar() {
             route: '/eventos'
         },
         {
-            label: 'Resultados',
+            label: 'Participaciones',
             icon: 'pi pi-trophy',
             route: '/resultados'
         }

@@ -57,10 +57,17 @@ const SportDiciplineTable = () => {
 
   const editDiscipline = async () => {
     try {
-      await SportDisciplineService.updateSportDiscipline(selectedDiscipline.id, disciplineData);
-      fetchDisciplines();
-      hideDisciplineModal();
-      toast.current.show({ severity: 'success', summary: 'Success', detail: 'Disciplina actualizada correctamente' });
+      const response = await SportDisciplineService.updateSportDiscipline(selectedDiscipline.id, disciplineData);
+
+      if (response.status === "INTERNAL_SERVER_ERROR") {
+        toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error al actualizar disciplina' });
+      } else {
+        fetchDisciplines();
+        hideDisciplineModal();
+        toast.current.show({ severity: 'success', summary: 'Success', detail: 'Disciplina actualizada correctamente' });
+      }
+
+
     } catch (error) {
       console.error('Error updating discipline:', error);
       toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error al actualizar disciplina' });
@@ -70,7 +77,7 @@ const SportDiciplineTable = () => {
   const deleteDiscipline = async (data) => {
     console.log(data);
     try {
-      
+
       await SportDisciplineService.deleteSporDiscipline(data.id);
       fetchDisciplines();
       hideDisciplineModal();

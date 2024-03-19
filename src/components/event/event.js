@@ -25,16 +25,41 @@ const EventTable = () => {
   }, []);
 
   const fetchEvents = async () => {
-    const response = await EventService.getAllEvents();
-    setEvents(response.data);
+    try {
+      const response = await EventService.getAllEvents();
+      setEvents(response.data);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      if (error.response && error.response.data && error.response.data.status === "INTERNAL_SERVER_ERROR") {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: error.response.data.message,
+        });
+      } else {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: "Error al obtener los eventos",
+        });
+      }
+    }
   };
 
   const openEventModal = (event) => {
     setSelectedEvent(event);
-    setEventData(event || { name: "", date: "" });
+    setEventData({
+      id: event ? event.id || "" : "", // Manejar el caso cuando event es null
+      name: event ? event.name || "" : "",
+      date: event && event.date ? new Date(event.date) : null,
+    });
     setDisplayModal(true);
     setIsEditing(!!event);
   };
+  
+
+
+  
 
   const hideEventModal = () => {
     setSelectedEvent(null);
@@ -55,31 +80,64 @@ const EventTable = () => {
       });
     } catch (error) {
       console.error("Error adding event:", error);
-      toast.current.show({
-        severity: "error",
-        summary: "Error",
-        detail: "Error al agregar evento",
-      });
+      if (error.response && error.response.data && error.response.data.status === "INTERNAL_SERVER_ERROR") {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: error.response.data.message,
+        });
+      } else {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: "Error al agregar evento",
+        });
+      }
     }
   };
 
   const editEvent = async () => {
     try {
-      await EventService.updateEvent(selectedEvent.id, eventData);
-      fetchEvents();
-      hideEventModal();
-      toast.current.show({
-        severity: "success",
-        summary: "Success",
-        detail: "Evento actualizado correctamente",
-      });
+
+
+      const dataToSend = {
+        id: eventData.id,
+        name: eventData.name,
+        date: eventData.date,
+      }
+      const response = await EventService.updateEvent(selectedEvent.id, dataToSend);
+
+      if (response.status === "INTERNAL_SERVER_ERROR") {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: `Error al actualizar evento ${response.message}`,
+        });
+      } else {
+
+        fetchEvents();
+        hideEventModal();
+        toast.current.show({
+          severity: "success",
+          summary: "Success",
+          detail: "Evento actualizado correctamente",
+        });
+      }
     } catch (error) {
       console.error("Error updating event:", error);
-      toast.current.show({
-        severity: "error",
-        summary: "Error",
-        detail: "Error al actualizar evento",
-      });
+      if (error.response && error.response.data && error.response.data.status === "INTERNAL_SERVER_ERROR") {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: error.response.data.message,
+        });
+      } else {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: "Error al actualizar evento",
+        });
+      }
     }
   };
 
@@ -95,11 +153,19 @@ const EventTable = () => {
       });
     } catch (error) {
       console.error("Error deleting event:", error);
-      toast.current.show({
-        severity: "error",
-        summary: "Error",
-        detail: "Error al eliminar evento",
-      });
+      if (error.response && error.response.data && error.response.data.status === "INTERNAL_SERVER_ERROR") {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: error.response.data.message,
+        });
+      } else {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: "Error al eliminar evento",
+        });
+      }
     }
   };
 

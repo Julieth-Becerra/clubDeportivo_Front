@@ -41,7 +41,7 @@ const ParticipationTable = () => {
     const response = await EventService.getAllEvents();
     setEvents(response.data);
   };
-  
+
   const getMember = async (id) => {
     try {
       const response = await MemberService.getMember(id);
@@ -53,7 +53,7 @@ const ParticipationTable = () => {
       console.error("Error fetching member:", error);
     }
   };
-  
+
   const getEvent = async (id) => {
     try {
       const response = await EventService.getEvent(id);
@@ -65,7 +65,7 @@ const ParticipationTable = () => {
       console.error("Error fetching event:", error);
     }
   };
-  
+
 
   const openParticipationModal = async (participation) => {
     setSelectedParticipation(participation);
@@ -80,12 +80,23 @@ const ParticipationTable = () => {
 
   const editParticipation = async (participation) => {
     try {
-      await ParticipationService.updateParticipation(participation);
-      toast.current.show({
-        severity: "success",
-        summary: "Éxito",
-        detail: "Participación editada correctamente",
-      });
+      const response = await ParticipationService.updateParticipation(participation.id, participation);
+
+      if (response.status === 200) {
+        toast.current.show({
+          severity: "success",
+          summary: "Éxito",
+          detail: "Participación editada correctamente",
+        });
+      } else {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: response.data.message,
+        });
+      }
+
+
       fetchParticipations();
     } catch (error) {
       console.error("Error editing participation:", error);
@@ -96,7 +107,7 @@ const ParticipationTable = () => {
       });
     }
   };
-  
+
   const deleteParticipation = async (participation) => {
     try {
       await ParticipationService.deleteParticipation(participation.id);
@@ -115,22 +126,25 @@ const ParticipationTable = () => {
       });
     }
   };
-  
+
 
   const handleFormSubmit = async () => {
     const errors = validateForm(selectedParticipation);
     if (Object.keys(errors).length === 0) {
       try {
+        let response; // Definir la variable response fuera del bloque if/else
+
         if (selectedParticipation.id) {
-          await editParticipation(selectedParticipation);
+          console.log("Editing participation:", selectedParticipation);
+          response = await editParticipation(selectedParticipation);
         } else {
           // Obteniendo directamente los datos del miembro y del evento necesarios
           const memberId = selectedParticipation.member.id;
           const eventId = selectedParticipation.event.id;
-  
+
           const selectedMember = members.find(member => member.id === memberId);
           const selectedEvent = events.find(event => event.id === eventId);
-  
+
           // Creando el objeto de participación con los campos necesarios
           const participation = {
             id: selectedParticipation.id || 0,
@@ -148,15 +162,29 @@ const ParticipationTable = () => {
             },
             position: selectedParticipation.position
           };
-  
-          await addParticipation(participation);
+
+          response = await addParticipation(participation);
+
+         
+
+          if (response.id) {
+            toast.current.show({
+              severity: "success",
+              summary: "Éxito",
+              detail: "Participación guardada correctamente",
+            });
+
+            fetchParticipations();
+            hideParticipationModal();
+          } else {
+            toast.current.show({
+              severity: "error",
+              summary: "Error",
+              detail: response.data.message,
+            });
+          }
+
         }
-        hideParticipationModal();
-        toast.current.show({
-          severity: "success",
-          summary: "Éxito",
-          detail: "Participación guardada correctamente",
-        });
       } catch (error) {
         console.error("Error saving participation:", error);
         toast.current.show({
@@ -169,8 +197,10 @@ const ParticipationTable = () => {
       setErrors(errors);
     }
   };
-  
-  
+
+
+
+
 
   const validateForm = (data) => {
     const errors = {};
@@ -187,11 +217,10 @@ const ParticipationTable = () => {
   };
 
   const addParticipation = async (participation) => {
-    await ParticipationService.addParticipation(participation);
-    fetchParticipations();
+    return await ParticipationService.addParticipation(participation);
   };
 
- 
+
 
   const modalContent = (
     <form onSubmit={handleFormSubmit} className="modal-form">

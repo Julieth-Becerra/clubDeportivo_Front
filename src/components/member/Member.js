@@ -46,8 +46,10 @@ const MemberTable = () => {
   const openMemberModal = (member) => {
     if (member) {
       // Si hay un miembro seleccionado, busca la disciplina deportiva correspondiente en el array de disciplinas deportivas y asígnala al miembro seleccionado
-      const selectedDiscipline = sportDisciplines.find(discipline => discipline.id === member.sportDiscipline.id);
-     
+      const selectedDiscipline = selectedMember && selectedMember.sportDiscipline
+        ? sportDisciplines.find(discipline => discipline.id === selectedMember.sportDiscipline.id)
+        : null;
+
       setSelectedMember({
         ...member,
         sportDiscipline: selectedDiscipline // Asigna la disciplina deportiva encontrada al miembro seleccionado
@@ -147,9 +149,9 @@ const MemberTable = () => {
           age,
           address,
           sportDiscipline: {
-            id: sportDiscipline.id ?? sportDiscipline 
+            id: sportDiscipline.id ?? sportDiscipline
           },
-          participations: selectedMember.participations 
+          participations: selectedMember.participations
         };
         await MemberService.updateMember(selectedMember.id, memberToUpdate);
         fetchMembers()
@@ -164,20 +166,14 @@ const MemberTable = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'sportDiscipline') {
-      setSelectedMember(prevState => ({
-        ...prevState,
-        sportDiscipline: value // Asigna el valor seleccionado directamente
-      }));
-    } else {
-      setSelectedMember(prevState => ({
-        ...prevState,
-        [name]: value
-      }));
-    }
+    setSelectedMember(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
     setErrors({ ...errors, [name]: undefined });
   };
-  
+
+
 
 
 
@@ -245,7 +241,7 @@ const MemberTable = () => {
           <Dropdown
             id="sportDiscipline"
             name="sportDiscipline"
-            value={selectedMember?.sportDiscipline?.id || null} // Aquí accedemos al ID de la disciplina deportiva
+            value={selectedMember?.sportDiscipline?.id || null}
             options={sportDisciplines}
             onChange={handleChange}
             optionLabel={formatDisciplineLabel}
@@ -253,6 +249,7 @@ const MemberTable = () => {
             placeholder="Seleccione una disciplina deportiva"
             className={errors.sportDiscipline && 'p-invalid'}
           />
+
           <label htmlFor="sportDiscipline">Disciplina Deportiva</label>
         </span>
       </div>
