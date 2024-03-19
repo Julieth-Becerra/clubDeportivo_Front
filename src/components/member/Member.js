@@ -35,6 +35,7 @@ const MemberTable = () => {
 
   const fetchMembers = async () => {
     const response = await MemberService.getAllMembers();
+    console.log(response.data)
     setMembers(response.data);
   };
 
