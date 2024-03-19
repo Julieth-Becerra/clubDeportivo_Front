@@ -7,9 +7,9 @@ import { NavLink } from 'react-router-dom';
 export default function NavBar() {
     const [menuItems] = useState([
         {
-            label: 'Afiliados',
+            label: 'Miembros',
             icon: 'pi pi-users',
-            route: '/afiliados' // Aquí define la ruta correspondiente
+            route: '/afiliados' 
         },
         {
             label: 'Disciplinas',
@@ -23,7 +23,7 @@ export default function NavBar() {
         },
         {
             label: 'Participaciones',
-            icon: 'pi pi-trophy',
+            icon: 'pi pi-calendar-plus',
             route: '/resultados'
         }
     ]);
@@ -38,7 +38,7 @@ export default function NavBar() {
             <div className="navbar-icons-container">
                 {menuItems.map((item, index) => (
                     <NavLink to={item.route} key={index} className="navbar-icon">
-                        <Button icon={item.icon} label={item.label} rounded outlined aria-label="Filter" />
+                        <Button icon={item.icon} label={item.label} rounded outlined aria-label="Filter" className="navbar-button" />
                     </NavLink>
                 ))}
             </div>

@@ -38,3 +38,7 @@
     width: 100%; /* Ajustamos el ancho de los botones */
     margin-bottom: 20px;
 }
+
+.navbar-button {
+    width: 175px; /* Cambia este valor según el ancho deseado */
+  }

@@ -2,7 +2,7 @@ import { PrimeReactProvider } from 'primereact/api';
 import 'primereact/resources/themes/lara-light-cyan/theme.css';
 import './App.css';
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 import Sidebar from './components/navBar/navBar';
 import Member from './components/member/Member';
@@ -20,10 +20,13 @@ function App() {
           <div className="content">
             <Banner />
             <Routes>
+
+              <Route path="/" element={<Navigate to="/afiliados" />} />
+
               <Route path="/afiliados" element={<Member />} />
               <Route path="/disciplinas" element={<SportDicipline />} />
               <Route path='/eventos' element={<Event />} />
-              <Route path='/resultados' element={<ResultsParticipation />}/>
+              <Route path='/resultados' element={<ResultsParticipation />} />
             </Routes>
           </div>
         </Router>
